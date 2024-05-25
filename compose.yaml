@@ -6,4 +6,4 @@ services:
       - 'MONGO_INITDB_ROOT_PASSWORD=bimatnha'
       - 'MONGO_INITDB_ROOT_USERNAME=phatdo'
     ports:
-      - '127017:27017'
+      - '24017:27017'

@@ -27,7 +27,7 @@ public class AccountController {
 
     @Autowired
     public AccountController(AccountService accountService,
-            ApplicationService applicationService) {
+                             ApplicationService applicationService, UserService userService) {
         this.accountService = accountService;
         this.applicationService = applicationService;
     }
@@ -35,11 +35,27 @@ public class AccountController {
     @GetMapping()
     public ResponseEntity<List<Account>> getAccounts() {
         User u = UserContext.getUser();
-        return ResponseEntity.ok(accountService.getAccountList(u));
+        try {
+            return ResponseEntity.ok(accountService.getAccountList(u));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
-
+    @GetMapping("{application}")
+    public ResponseEntity<Account> getAccountById(@PathVariable("application") String application) {
+        try {
+            User u = UserContext.getUser();
+            Account account = accountService.getAccount(u.getId(), application);
+            return ResponseEntity.ok(account);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.getError().getCode());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatusCode.valueOf(500));
+        }
+    }
     @PostMapping
-    public ResponseEntity<Account> saveAccount(@RequestBody CreateAccountDTO form) {
+    public ResponseEntity<Account> saveAccount(@RequestBody CreateAccountDTO form){
         try {
             User u = UserContext.getUser();
             log.info("Username: {} ", u.getUsername());
@@ -51,8 +67,10 @@ public class AccountController {
             return ResponseEntity.ok(account);
         } catch (CustomException e) {
             log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatusCode.valueOf(400));
+            return new ResponseEntity<>(e.getError().getCode());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatusCode.valueOf(500));
         }
     }
-
 }

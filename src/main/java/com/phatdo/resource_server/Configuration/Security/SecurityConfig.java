@@ -1,7 +1,5 @@
 package com.phatdo.resource_server.Configuration.Security;
 
-import com.phatdo.resource_server.Configuration.OAuth2.OAuth2SuccessHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

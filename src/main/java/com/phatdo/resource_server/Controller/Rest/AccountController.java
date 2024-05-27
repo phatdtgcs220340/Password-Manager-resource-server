@@ -1,6 +1,6 @@
 package com.phatdo.resource_server.Controller.Rest;
 
-import com.phatdo.resource_server.Controller.RequestBody.CreateAccountForm;
+import com.phatdo.resource_server.Controller.dto.CreateAccountDTO;
 import com.phatdo.resource_server.Document.Account.Account;
 import com.phatdo.resource_server.Document.Account.AccountService;
 import com.phatdo.resource_server.Document.Application.Application;
@@ -42,7 +42,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<Account> saveAccount(@RequestBody CreateAccountForm form,
+    public ResponseEntity<Account> saveAccount(@RequestBody CreateAccountDTO form,
             JwtAuthenticationToken authentication) {
         try {
             String fullName = authentication.getTokenAttributes().get("fullName").toString();

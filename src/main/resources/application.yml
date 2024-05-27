@@ -4,12 +4,13 @@ spring:
   data: 
     mongodb:
       uri: mongodb://localhost:27017/resource-server-db
-      user: phatdo
-      password: bimatnha
   security:
     oauth2:
       resource-server:
         jwt:
           jwt-set-uri: http://127.0.0.1:9000/oauth2/jwks
+  profiles:
+    include:
+      - secret
 server:
   port: 9090

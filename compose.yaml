@@ -3,7 +3,6 @@ services:
     image: 'mongo:latest'
     environment:
       - 'MONGO_INITDB_DATABASE=resource-server-db'
-      - 'MONGO_INITDB_ROOT_PASSWORD=bimatnha'
-      - 'MONGO_INITDB_ROOT_USERNAME=phatdo'
+    command: mongod --quiet
     ports:
       - '24017:27017'

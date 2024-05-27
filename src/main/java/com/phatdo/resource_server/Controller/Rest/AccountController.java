@@ -1,6 +1,7 @@
 package com.phatdo.resource_server.Controller.Rest;
 
 import com.phatdo.resource_server.Controller.dto.CreateAccountDTO;
+import com.phatdo.resource_server.CustomContext.UserContext.UserContext;
 import com.phatdo.resource_server.Document.Account.Account;
 import com.phatdo.resource_server.Document.Account.AccountService;
 import com.phatdo.resource_server.Document.Application.Application;
@@ -23,30 +24,24 @@ import java.util.List;
 public class AccountController {
     private final AccountService accountService;
     private final ApplicationService applicationService;
-    private final UserService userService;
 
     @Autowired
     public AccountController(AccountService accountService,
-            ApplicationService applicationService,
-            UserService userService) {
+            ApplicationService applicationService) {
         this.accountService = accountService;
         this.applicationService = applicationService;
-        this.userService = userService;
     }
 
     @GetMapping()
-    public ResponseEntity<List<Account>> getAccounts(JwtAuthenticationToken authentication) {
-        String fullName = authentication.getTokenAttributes().get("fullName").toString();
-        User u = userService.processOAuth2PostLogin(authentication.getName(), fullName);
+    public ResponseEntity<List<Account>> getAccounts() {
+        User u = UserContext.getUser();
         return ResponseEntity.ok(accountService.getAccountList(u));
     }
 
     @PostMapping
-    public ResponseEntity<Account> saveAccount(@RequestBody CreateAccountDTO form,
-            JwtAuthenticationToken authentication) {
+    public ResponseEntity<Account> saveAccount(@RequestBody CreateAccountDTO form) {
         try {
-            String fullName = authentication.getTokenAttributes().get("fullName").toString();
-            User u = userService.processOAuth2PostLogin(authentication.getName(), fullName);
+            User u = UserContext.getUser();
             log.info("Username: {} ", u.getUsername());
             Application application = applicationService
                     .saveApplication(new Application(form.applicationName(), form.type()));

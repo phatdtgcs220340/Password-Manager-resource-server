@@ -17,8 +17,8 @@ public class Account {
     @Id
     private String id;
     private final String username;
-    private final String password;
-    private ZonedDateTime createdAt;
+    private String password;
+    private final ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
     @DBRef
     private User user;

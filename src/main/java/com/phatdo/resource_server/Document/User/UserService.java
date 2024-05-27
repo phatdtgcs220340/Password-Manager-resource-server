@@ -18,19 +18,16 @@ public class UserService {
         this.repo = repo;
     }
 
-    public User getUser(String username) throws UsernameNotFoundException {
-        return repo.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Not found username " + username));
-    }
-
     public User processOAuth2PostLogin(String fullName, String username) {
-        try {
-            return this.getUser(username);
-        } catch (UsernameNotFoundException e) {
-            User newUser = new User(fullName, username);
-            newUser.setCreatedAt(ZonedDateTime.now(ZoneOffset.UTC));
-            log.info("User successfully register!: {}", newUser.getUsername());
-            return repo.save(newUser);
-        }
+        return repo.findByUsername(username).map(user -> {
+            log.info("User successfully login!: {}", user.getUsername());
+            return user;
+        })
+                .orElseGet( () -> {
+                    User newUser = new User(fullName, username);
+                    newUser.setCreatedAt(ZonedDateTime.now(ZoneOffset.UTC));
+                    log.info("User successfully register!: {}", newUser.getUsername());
+                    return repo.save(newUser);
+        });
     }
 }

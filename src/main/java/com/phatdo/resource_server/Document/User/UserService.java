@@ -22,12 +22,11 @@ public class UserService {
         return repo.findByUsername(username).map(user -> {
             log.info("User successfully login!: {}", user.getUsername());
             return user;
-        })
-                .orElseGet( () -> {
-                    User newUser = new User(fullName, username);
-                    newUser.setCreatedAt(ZonedDateTime.now(ZoneOffset.UTC));
-                    log.info("User successfully register!: {}", newUser.getUsername());
-                    return repo.save(newUser);
+        }).orElseGet( () -> {
+            User newUser = new User(fullName, username);
+            newUser.setCreatedAt(ZonedDateTime.now(ZoneOffset.UTC));
+            log.info("User successfully register!: {}", newUser.getUsername());
+            return repo.save(newUser);
         });
     }
 }

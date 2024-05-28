@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,7 +33,6 @@ public class AccountService {
             account.setUpdatedAt(now);
             account.setApplication(application);
             account.setUser(user);
-            account.setApplication(application);
             log.info("Attempt to save new account:{} - {}", account.getUsername(), account.getApplication());
             return repo.save(account);
         } else {
@@ -56,7 +56,18 @@ public class AccountService {
                 })
                 .orElseThrow(() -> new CustomException(CustomError.ACCOUNT_NOT_FOUND));
     }
-
+    public void deleteAccount(String id, String userId) throws CustomException {
+        Optional<Account> optAccount = repo.findById(id);
+        optAccount = optAccount.map(account -> {
+            if (account.getUser().getId().equals(userId)) {
+                repo.delete(account);
+                return account;
+            }
+            else return null;
+        });
+        if (optAccount.isEmpty())
+            throw new CustomException(CustomError.ACCOUNT_NOT_FOUND);
+    }
     public List<Application> getApplications(User user) {
         return repo.findByUser(user)
                 .stream()

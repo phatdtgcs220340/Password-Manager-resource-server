@@ -1,6 +1,7 @@
 package com.phatdo.resource_server.Controller.Rest;
 
 import com.phatdo.resource_server.Controller.dto.CreateAccountDTO;
+import com.phatdo.resource_server.Controller.dto.DeleteAccountDTO;
 import com.phatdo.resource_server.CustomContext.UserContext.UserContext;
 import com.phatdo.resource_server.Document.Account.Account;
 import com.phatdo.resource_server.Document.Account.AccountService;
@@ -13,10 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,6 +30,7 @@ public class AccountController {
         this.accountService = accountService;
         this.applicationService = applicationService;
     }
+
     @GetMapping()
     public ResponseEntity<Account> getAccountById(@RequestParam(name = "applicationId") String application,
                                                   @RequestParam(name = "decrypted") boolean isDecrypted) {
@@ -45,6 +45,7 @@ public class AccountController {
             return new ResponseEntity<>(HttpStatusCode.valueOf(500));
         }
     }
+
     @PostMapping
     public ResponseEntity<Account> saveAccount(@RequestBody CreateAccountDTO form){
         try {
@@ -62,6 +63,18 @@ public class AccountController {
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatusCode.valueOf(500));
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteAccount(@RequestBody DeleteAccountDTO form) {
+        try {
+            User user = UserContext.getUser();
+            accountService.deleteAccount(form.id(), user.getId());
+            return ResponseEntity.noContent().build();
+        }
+        catch (CustomException e) {
+            return new ResponseEntity<>(e.getError().getCode());
         }
     }
 }

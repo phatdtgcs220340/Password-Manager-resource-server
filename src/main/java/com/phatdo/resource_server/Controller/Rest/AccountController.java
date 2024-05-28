@@ -73,7 +73,7 @@ public class AccountController {
         }
     }
     @DeleteMapping
-    public ResponseEntity<String> deleteAccount(@RequestParam(name = "applicationId") String id) {
+    public ResponseEntity<String> deleteAccount(@RequestParam(name = "accountId") String id) {
         try {
             User user = UserContext.getUser();
             accountService.deleteAccount(id, user);

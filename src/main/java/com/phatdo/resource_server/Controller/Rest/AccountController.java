@@ -31,21 +31,12 @@ public class AccountController {
         this.accountService = accountService;
         this.applicationService = applicationService;
     }
-
     @GetMapping()
-    public ResponseEntity<List<Account>> getAccounts() {
-        User u = UserContext.getUser();
-        try {
-            return ResponseEntity.ok(accountService.getAccountList(u));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-    @GetMapping("{application}")
-    public ResponseEntity<Account> getAccountById(@PathVariable("application") String application) {
+    public ResponseEntity<Account> getAccountById(@RequestParam(name = "applicationId") String application,
+                                                  @RequestParam(name = "decrypted") boolean isDecrypted) {
         try {
             User u = UserContext.getUser();
-            Account account = accountService.getAccount(u.getId(), application);
+            Account account = accountService.getAccount(u.getId(), application, isDecrypted);
             return ResponseEntity.ok(account);
         } catch (CustomException e) {
             return new ResponseEntity<>(e.getError().getCode());

@@ -41,31 +41,26 @@ public class AccountService {
         }
     }
 
-    public Account getAccount(String userId, String applicationId) throws Exception {
+    public Account getAccount(String userId, String applicationId, boolean isDecrypted) throws Exception {
         return repo.findByUserIdAndApplicationId(userId, applicationId)
-                .map( (account) -> {
+                .map( account -> {
                     try {
-                        log.info(account.getPassword());
-                        account.setPassword(encryptionService.decrypt(account.getPassword()));
+                        if (isDecrypted)
+                            account.setPassword(encryptionService.decrypt(account.getPassword()));
                         return account;
                     }
                     catch (Exception e) {
-                        log.error(e.getMessage());
+                        log.error("Cannot decrypt password :((. It must be an secret properties error");
                         return account;
                     }
-                }
-                )
+                })
                 .orElseThrow(() -> new CustomException(CustomError.ACCOUNT_NOT_FOUND));
     }
 
-    public List<Account> getAccountList(User user) throws Exception {
-        return repo.findByUser(user).stream().map(account -> {
-            try {
-                account.setPassword(encryptionService.decrypt(account.getPassword()));
-                return account;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).toList();
+    public List<Application> getApplications(User user) {
+        return repo.findByUser(user)
+                .stream()
+                .map(Account::getApplication)
+                .toList();
     }
 }

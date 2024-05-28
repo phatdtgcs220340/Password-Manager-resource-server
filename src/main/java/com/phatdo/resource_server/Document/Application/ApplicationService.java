@@ -1,5 +1,6 @@
 package com.phatdo.resource_server.Document.Application;
 
+import com.phatdo.resource_server.Document.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

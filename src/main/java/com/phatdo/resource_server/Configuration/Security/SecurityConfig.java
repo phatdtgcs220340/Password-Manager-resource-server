@@ -14,8 +14,9 @@ public class SecurityConfig {
     private String keySetUri;
     @Bean
     public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(c -> c
-                .anyRequest().authenticated())
+        http
+                .authorizeHttpRequests(c -> c
+                    .anyRequest().authenticated())
                 .oauth2ResourceServer(c -> c
                         .jwt(j -> j
                                 .jwkSetUri(keySetUri)));

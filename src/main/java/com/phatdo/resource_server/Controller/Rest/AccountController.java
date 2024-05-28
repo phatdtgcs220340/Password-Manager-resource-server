@@ -1,7 +1,6 @@
 package com.phatdo.resource_server.Controller.Rest;
 
-import com.phatdo.resource_server.Controller.dto.CreateAccountDTO;
-import com.phatdo.resource_server.Controller.dto.DeleteAccountDTO;
+import com.phatdo.resource_server.Controller.dto.AccountDTO;
 import com.phatdo.resource_server.CustomContext.UserContext.UserContext;
 import com.phatdo.resource_server.Document.Account.Account;
 import com.phatdo.resource_server.Document.Account.AccountService;
@@ -32,22 +31,19 @@ public class AccountController {
     }
 
     @GetMapping()
-    public ResponseEntity<Account> getAccountById(@RequestParam(name = "applicationId") String application,
+    public ResponseEntity<AccountDTO> getAccountById(@RequestParam(name = "applicationId") String application,
                                                   @RequestParam(name = "decrypted") boolean isDecrypted) {
         try {
             User u = UserContext.getUser();
             Account account = accountService.getAccount(u.getId(), application, isDecrypted);
-            return ResponseEntity.ok(account);
+            return ResponseEntity.ok(account.toDTO());
         } catch (CustomException e) {
             return new ResponseEntity<>(e.getError().getCode());
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatusCode.valueOf(500));
         }
     }
 
     @PostMapping
-    public ResponseEntity<Account> saveAccount(@RequestBody CreateAccountDTO form){
+    public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO form){
         try {
             User u = UserContext.getUser();
             log.info("Username: {} ", u.getUsername());
@@ -56,7 +52,7 @@ public class AccountController {
 
             Account account = accountService.saveAccount(u, application,
                     form.username(), form.password());
-            return ResponseEntity.ok(account);
+            return ResponseEntity.ok(account.toDTO());
         } catch (CustomException e) {
             log.error(e.getMessage());
             return new ResponseEntity<>(e.getError().getCode());
@@ -65,12 +61,22 @@ public class AccountController {
             return new ResponseEntity<>(HttpStatusCode.valueOf(500));
         }
     }
-
-    @DeleteMapping
-    public ResponseEntity<String> deleteAccount(@RequestBody DeleteAccountDTO form) {
+    @PatchMapping
+    public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO form){
         try {
             User user = UserContext.getUser();
-            accountService.deleteAccount(form.id(), user.getId());
+            Account account = accountService.updateAccount(form.id(), form.password(), user);
+            return ResponseEntity.ok(account.toDTO());
+        }
+        catch (CustomException e) {
+            return new ResponseEntity<>(e.getError().getCode());
+        }
+    }
+    @DeleteMapping
+    public ResponseEntity<String> deleteAccount(@RequestParam(name = "applicationId") String id) {
+        try {
+            User user = UserContext.getUser();
+            accountService.deleteAccount(id, user);
             return ResponseEntity.noContent().build();
         }
         catch (CustomException e) {

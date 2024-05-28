@@ -1,6 +1,7 @@
 package com.phatdo.resource_server.Document.Account;
 
 import com.phatdo.resource_server.Configuration.Security.Encryption.EncryptionService;
+import com.phatdo.resource_server.Controller.dto.AccountDTO;
 import com.phatdo.resource_server.Document.Application.Application;
 import com.phatdo.resource_server.Document.User.User;
 import com.phatdo.resource_server.Exception.CustomError;
@@ -41,7 +42,7 @@ public class AccountService {
         }
     }
 
-    public Account getAccount(String userId, String applicationId, boolean isDecrypted) throws Exception {
+    public Account getAccount(String userId, String applicationId, boolean isDecrypted) throws CustomException {
         return repo.findByUserIdAndApplicationId(userId, applicationId)
                 .map( account -> {
                     try {
@@ -56,15 +57,15 @@ public class AccountService {
                 })
                 .orElseThrow(() -> new CustomException(CustomError.ACCOUNT_NOT_FOUND));
     }
-    public void deleteAccount(String id, String userId) throws CustomException {
-        Optional<Account> optAccount = repo.findById(id);
-        optAccount = optAccount.map(account -> {
-            if (account.getUser().getId().equals(userId)) {
-                repo.delete(account);
-                return account;
-            }
-            else return null;
-        });
+    public void deleteAccount(String id, User user) throws CustomException {
+        Optional<Account> optAccount = repo.findById(id)
+                .map(account -> {
+                    if (account.getUser().equals(user)) {
+                        repo.delete(account);
+                        return account;
+                    }
+                    else return null;
+                });
         if (optAccount.isEmpty())
             throw new CustomException(CustomError.ACCOUNT_NOT_FOUND);
     }
@@ -73,5 +74,24 @@ public class AccountService {
                 .stream()
                 .map(Account::getApplication)
                 .toList();
+    }
+    public Account updateAccount(String id, String newPassword, User user) throws CustomException {
+        Optional<Account> optAccount = repo.findById(id)
+                .map(account -> {
+                    if (account.getUser().equals(user)) {
+                        try {
+                            account.setPassword(encryptionService.encrypt(newPassword));
+                            account.setUpdatedAt(ZonedDateTime.now(ZoneOffset.UTC));
+                            return repo.save(account);
+                        } catch (Exception e) {
+                            log.error("Cannot update password :((. It must be an secret properties error");
+                            return account;
+                        }
+                    }
+                    else return null;
+                });
+        if (optAccount.isEmpty())
+            throw new CustomException(CustomError.ACCOUNT_NOT_FOUND);
+        else return optAccount.get();
     }
 }

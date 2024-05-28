@@ -7,7 +7,6 @@ import com.phatdo.resource_server.Document.Account.AccountService;
 import com.phatdo.resource_server.Document.Application.Application;
 import com.phatdo.resource_server.Document.Application.ApplicationService;
 import com.phatdo.resource_server.Document.User.User;
-import com.phatdo.resource_server.Document.User.UserService;
 import com.phatdo.resource_server.Exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class AccountController {
 
     @Autowired
     public AccountController(AccountService accountService,
-                             ApplicationService applicationService, UserService userService) {
+                             ApplicationService applicationService) {
         this.accountService = accountService;
         this.applicationService = applicationService;
     }

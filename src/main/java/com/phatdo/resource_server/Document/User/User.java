@@ -1,6 +1,8 @@
 package com.phatdo.resource_server.Document.User;
 
 import java.time.ZonedDateTime;
+
+import com.phatdo.resource_server.Controller.dto.UserDTO;
 import org.springframework.data.annotation.Id;
 
 import lombok.Data;
@@ -29,5 +31,9 @@ public class User {
                 this.username.equals(user.getUsername()) &&
                 this.fullName.equals(user.getFullName()) &&
                 this.createdAt.equals(user.getCreatedAt());
+    }
+
+    public UserDTO toDTO() {
+        return new UserDTO(this.fullName, this.username);
     }
 }

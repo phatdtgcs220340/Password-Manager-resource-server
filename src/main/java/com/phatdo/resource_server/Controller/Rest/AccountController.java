@@ -30,11 +30,10 @@ public class AccountController {
     }
 
     @GetMapping()
-    public ResponseEntity<AccountDTO> getAccountById(@RequestParam(name = "applicationId") String application,
-                                                  @RequestParam(name = "decrypted") boolean isDecrypted) {
+    public ResponseEntity<AccountDTO> getAccountById(@RequestParam(name = "applicationId") String application) {
         try {
             User u = UserContext.getUser();
-            Account account = accountService.getAccount(u.getId(), application, isDecrypted);
+            Account account = accountService.getAccount(u.getId(), application);
             return ResponseEntity.ok(account.toDTO());
         } catch (CustomException e) {
             return new ResponseEntity<>(e.getError().getCode());

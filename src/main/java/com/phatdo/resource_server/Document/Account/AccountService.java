@@ -42,12 +42,11 @@ public class AccountService {
         }
     }
 
-    public Account getAccount(String userId, String applicationId, boolean isDecrypted) throws CustomException {
+    public Account getAccount(String userId, String applicationId) throws CustomException {
         return repo.findByUserIdAndApplicationId(userId, applicationId)
                 .map( account -> {
                     try {
-                        if (isDecrypted)
-                            account.setPassword(encryptionService.decrypt(account.getPassword()));
+                        account.setPassword(encryptionService.decrypt(account.getPassword()));
                         return account;
                     }
                     catch (Exception e) {

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/application")
+@RequestMapping(value = "/api/v1/application", produces = "application/json")
 public class ApplicationController {
     private final AccountService accountService;
     @Autowired

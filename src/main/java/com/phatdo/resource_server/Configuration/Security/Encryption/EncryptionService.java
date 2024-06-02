@@ -1,9 +1,5 @@
 package com.phatdo.resource_server.Configuration.Security.Encryption;
 
-
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,19 +12,17 @@ import java.util.Base64;
 @Component
 public class EncryptionService {
 
-    private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private static final int GCM_TAG_LENGTH = 16; // 128 bits
     private static final int IV_LENGTH = 12; // 96 bits
-    private static final Logger log = LoggerFactory.getLogger(EncryptionService.class);
     private final SecretProperties secretProperties;
 
     @Autowired
     public EncryptionService(SecretProperties secretProperties) {
         this.secretProperties = secretProperties;
     }
+
     public String encrypt(String data) throws Exception {
-        System.out.println(secretProperties.getSalt());
         String saltString = secretProperties.getSalt();
         String passphrase = secretProperties.getPassphrase();
         byte[] salt = SaltGenerator.getSaltFromString(saltString);
@@ -53,7 +47,6 @@ public class EncryptionService {
 
         String saltString = secretProperties.getSalt();
         String passphrase = secretProperties.getPassphrase();
-        log.info(passphrase);
         byte[] encryptedDataWithIv = Base64.getDecoder().decode(encryptedData);
         byte[] salt = SaltGenerator.getSaltFromString(saltString);
         SecretKey key = KeyDerivation.deriveKey(passphrase.toCharArray(), salt);

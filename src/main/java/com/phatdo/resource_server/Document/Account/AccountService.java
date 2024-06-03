@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -59,6 +60,8 @@ public class AccountService {
         Optional<Account> optAccount = repo.findById(id)
                 .map(account -> {
                     if (account.getUser().equals(user)) {
+                        account.setUser(null);
+                        account.setApplication(null);
                         repo.delete(account);
                         return account;
                     } else
@@ -71,6 +74,7 @@ public class AccountService {
     public List<Application> getApplications(User user) {
         return repo.findByUser(user)
                 .stream()
+                .filter(Objects::nonNull)
                 .map(Account::getApplication)
                 .toList();
     }

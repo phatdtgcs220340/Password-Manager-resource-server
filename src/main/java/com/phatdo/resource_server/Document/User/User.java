@@ -2,7 +2,7 @@ package com.phatdo.resource_server.Document.User;
 
 import java.time.ZonedDateTime;
 
-import com.phatdo.resource_server.Controller.dto.UserDTO;
+import com.phatdo.resource_server.dto.response.UserDTO;
 import org.springframework.data.annotation.Id;
 
 import lombok.Data;

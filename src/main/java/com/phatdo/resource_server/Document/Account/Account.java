@@ -1,6 +1,6 @@
 package com.phatdo.resource_server.Document.Account;
 
-import com.phatdo.resource_server.Controller.dto.AccountDTO;
+import com.phatdo.resource_server.dto.response.AccountDTO;
 import com.phatdo.resource_server.Document.Application.Application;
 import com.phatdo.resource_server.Document.User.User;
 import jakarta.validation.constraints.NotBlank;

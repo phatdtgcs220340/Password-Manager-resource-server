@@ -37,7 +37,7 @@ public class AccountService {
             log.info("Attempt to save new account:{} - {}", account.getUsername(), account.getApplication());
             return repo.save(account);
         } else {
-            log.error("User {} already exists", username);
+            log.error("Account {} already exists", application.getApplicationName());
             throw new CustomException(CustomError.ACCOUNT_IS_EXISTED);
         }
     }
@@ -88,7 +88,7 @@ public class AccountService {
                             account.setUpdatedAt(ZonedDateTime.now(ZoneOffset.UTC));
                             return repo.save(account);
                         } catch (Exception e) {
-                            log.error("Cannot update password :((. It must be an secret properties error");
+                            log.error("Cannot update password :((. It must be an secret properties error {}", e.getMessage());
                             return account;
                         }
                     } else

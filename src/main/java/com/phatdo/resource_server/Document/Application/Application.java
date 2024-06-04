@@ -1,5 +1,6 @@
 package com.phatdo.resource_server.Document.Application;
 
+import com.phatdo.resource_server.dto.response.ApplicationDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -17,4 +18,8 @@ public class Application {
     private final String applicationName;
     @NotNull(message = "Type must not be null")
     private final ApplicationType type;
+
+    public ApplicationDTO toDTO() {
+        return new ApplicationDTO(id, applicationName, type);
+    }
 }

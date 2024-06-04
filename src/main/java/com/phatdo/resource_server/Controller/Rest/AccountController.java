@@ -1,6 +1,8 @@
 package com.phatdo.resource_server.Controller.Rest;
 
-import com.phatdo.resource_server.Controller.dto.AccountDTO;
+import com.phatdo.resource_server.dto.request.CreateAccountDTO;
+import com.phatdo.resource_server.dto.request.UpdateAccountDTO;
+import com.phatdo.resource_server.dto.response.AccountDTO;
 import com.phatdo.resource_server.CustomContext.UserContext.UserContext;
 import com.phatdo.resource_server.Document.Account.Account;
 import com.phatdo.resource_server.Document.Account.AccountService;
@@ -41,7 +43,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO form){
+    public ResponseEntity<AccountDTO> saveAccount(@RequestBody CreateAccountDTO form){
         try {
             User u = UserContext.getUser();
             log.info("Username: {} ", u.getUsername());
@@ -60,10 +62,10 @@ public class AccountController {
         }
     }
     @PatchMapping
-    public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO form){
+    public ResponseEntity<AccountDTO> updateAccount(@RequestBody UpdateAccountDTO form){
         try {
             User user = UserContext.getUser();
-            Account account = accountService.updateAccount(form.id(), form.password(), user);
+            Account account = accountService.updateAccount(form.id(), form.newPassword(), user);
             return ResponseEntity.ok(account.toDTO());
         }
         catch (CustomException e) {

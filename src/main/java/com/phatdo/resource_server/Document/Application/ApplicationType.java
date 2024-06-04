@@ -5,6 +5,7 @@ public enum ApplicationType {
     WEB_TOOL,
     BANK_APPLICATION,
     SHOPPING_APPLICATION,
+    GAME,
     CARD,
     OTHERS
 }

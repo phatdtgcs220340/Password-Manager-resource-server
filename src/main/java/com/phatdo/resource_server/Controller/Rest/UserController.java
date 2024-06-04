@@ -1,6 +1,6 @@
 package com.phatdo.resource_server.Controller.Rest;
 
-import com.phatdo.resource_server.Controller.dto.UserDTO;
+import com.phatdo.resource_server.dto.response.UserDTO;
 import com.phatdo.resource_server.CustomContext.UserContext.UserContext;
 import com.phatdo.resource_server.Document.User.User;
 import org.springframework.http.ResponseEntity;

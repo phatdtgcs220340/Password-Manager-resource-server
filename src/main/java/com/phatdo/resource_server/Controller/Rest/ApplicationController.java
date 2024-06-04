@@ -4,6 +4,7 @@ import com.phatdo.resource_server.CustomContext.UserContext.UserContext;
 import com.phatdo.resource_server.Document.Account.AccountService;
 import com.phatdo.resource_server.Document.Application.Application;
 import com.phatdo.resource_server.Document.User.User;
+import com.phatdo.resource_server.dto.response.ApplicationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +22,13 @@ public class ApplicationController {
         this.accountService = accountService;
     }
     @GetMapping()
-    public ResponseEntity<List<Application>> getUserApplications(){
+    public ResponseEntity<List<ApplicationDTO>> getUserApplications(){
         User user = UserContext.getUser();
-        List<Application> applications =
-                    accountService.getApplications(user);
-        return ResponseEntity.ok(applications);
+        List<ApplicationDTO> applicationsDto =
+                    accountService.getApplications(user)
+                            .stream()
+                            .map(Application::toDTO)
+                            .toList();
+        return ResponseEntity.ok(applicationsDto);
     }
 }

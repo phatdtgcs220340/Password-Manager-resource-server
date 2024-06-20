@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.phatdo.resource-server' is invalid and this project uses 'com.phatdo.resource_server' instead.
+* The original package name 'com.phatdo.resource-server' is invalid and this project uses 'com.phatdo.resourceserver' instead.
 
 # Getting Started
 

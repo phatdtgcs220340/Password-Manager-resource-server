@@ -19,10 +19,7 @@ public class Account {
 
     @Id
     private String id;
-    @NotBlank(message = "Username must not be blank")
     private final String username;
-    @NotBlank(message = "Password must not be blank")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
     private final ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
